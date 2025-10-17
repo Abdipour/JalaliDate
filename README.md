@@ -24,7 +24,13 @@ This module is built upon two key libraries:
 Follow these steps to install the module in your Akaunting instance:
 
 1.  **Download the Module:**
-    Download the latest release as a ZIP file or clone the repository into your Akaunting `modules` directory. The path should look like this:
+    You have three options to get the module files:
+
+    - **Option A (Recommended):** Download the latest stable version from the [**GitHub Releases**](https://github.com/Abdipour/JalaliDate/releases) page.
+    - **Option B (Direct Download):** Download the latest development version directly as a [**ZIP file**](https://github.com/Abdipour/JalaliDate/archive/refs/heads/main.zip).
+    - **Option C (Clone):** Clone the repository into your Akaunting `modules` directory.
+
+    The final path should look like this:
 
     ```bash
     <your-akaunting-root>/modules/JalaliDate/
