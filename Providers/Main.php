@@ -9,9 +9,7 @@ use App\Models\Document\DocumentTotal;
 use App\Models\Banking\Transaction;
 use Modules\JalaliDate\Observers\JalaliObserver;
 use Illuminate\Support\Facades\View as FacadesView;
-use \Illuminate\View\View;
-use Modules\JalaliDate\Http\Overrides\CustomTranslator;
-use Illuminate\Contracts\Translation\Translator as TranslatorContract;
+use Illuminate\View\View;
 
 class Main extends ServiceProvider
 {
@@ -26,15 +24,14 @@ class Main extends ServiceProvider
             $loader = $app['translation.loader'];
             $locale = $app['config']['app.locale'];
 
-            $translator = new CustomTranslator($loader, $locale);
+            $translator = new \Modules\JalaliDate\Http\Overrides\CustomTranslator($loader, $locale);
             $translator->setFallback($app['config']['app.fallback_locale']);
 
             return $translator;
         });
 
-        $this->app->alias('translator', TranslatorContract::class);
+        $this->app->alias('translator', Illuminate\Contracts\Translation\Translator::class);
 
-        //$this->loadConfig();
         $this->loadRoutes();
     }
 
@@ -56,11 +53,6 @@ class Main extends ServiceProvider
         if (class_exists(\Modules\Employees\Models\Employee::class)) {
             \Modules\Employees\Models\Employee::observe(JalaliObserver::class);
         }
-
-        /* FacadesView::composer('*', function (View $view) {
-            $name = $view->getName();
-            \Log::info("ServiceProvider: " . $name);
-        }); */
 
         FacadesView::composer('components.form.group.date', function (View $view) {
             $view->getFactory()->startPush('scripts', view('jalali-date::jalali_date_scripts'));
@@ -122,10 +114,6 @@ class Main extends ServiceProvider
 
         FacadesView::composer('components.documents.show.create', function (View $view) {
             $data = $view->getData();
-            /* \Log::info("ServiceProvider: " . var_export($data['created_date'], true));
-            //\Log::info("ServiceProvider: " . var_export(array_keys($data), true));
-            \Log::info("ServiceProvider: " . var_export($data['document']->created_at, true));
-            \Log::info("ServiceProvider: " . var_export($data['document']->getCompanyDateFormat(), true)); */
             $data['created_date'] = '<span class="font-medium">' . \Morilog\Jalali\Jalalian::fromCarbon($data['document']->created_at)->format($data['document']->getCompanyDateFormat()) . '</span>';
             $view->with($data);
         });
@@ -212,16 +200,6 @@ class Main extends ServiceProvider
     public function loadMigrations()
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-    }
-
-    /**
-     * Load config.
-     *
-     * @return void
-     */
-    public function loadConfig()
-    {
-        $this->mergeConfigFrom(__DIR__ . '/../Config/config.php', 'jalali-date');
     }
 
     /**
