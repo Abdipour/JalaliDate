@@ -17,7 +17,7 @@ This module provides full Jalali (Persian) calendar support for Akaunting 3.1.x.
 This module is built upon two key libraries:
 
 - **Backend:** [morilog/jalali](https://github.com/morilog/jalali) - For robust and reliable Jalali to Gregorian (and vice-versa) date conversions in PHP.
-- **Frontend:** [flatpickr-jalali-support](https://github.com/alireza-ab/flatpickr-jalali-support) - For the beautiful and functional Jalali datepicker UI.
+- **Frontend:** [flatpickr-jalali-support](https://www.npmjs.com/package/flatpickr-jalali-support) - For the beautiful and functional Jalali datepicker UI.
 
 ## Installation
 
