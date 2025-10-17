@@ -1,0 +1,23 @@
+# Composer dependencies
+/vendor/
+
+# NPM dependencies
+/node_modules/
+
+# Compiled assets (if you have a build process that outputs to public)
+/public/
+
+# Lock files for libraries
+composer.lock
+package-lock.json
+yarn.lock
+
+# IDE and editor settings (especially sensitive ones like sftp.json)
+/.vscode/
+.vscode/*
+/.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
