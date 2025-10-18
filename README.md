@@ -70,6 +70,14 @@ Once installed and enabled, the module works automatically. All date fields in t
 
 This module is designed and tested for **Akaunting version 3.1.x**.
 
+## Supported Akaunting Apps
+
+This module provides Jalali date support for the following Akaunting apps:
+
+- **Employees:** All date fields in the Employees app are converted to Jalali.
+
+*More app integrations will be added in future releases.*
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
