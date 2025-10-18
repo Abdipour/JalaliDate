@@ -14,6 +14,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     initJalaliDatepickers(document)
+    hookModalEvents()
   })
 
   if (typeof Livewire !== "undefined") {
@@ -40,5 +41,31 @@
 
       elementWithInstance.classList.add("jalali-initialized")
     })
+  }
+
+  function hookModalEvents() {
+    const originalAxiosGet = window.axios.get
+
+    window.axios.get = function (url, ...args) {
+      const isModalRequest = url.includes("/modals/")
+
+      if (isModalRequest) {
+        return originalAxiosGet.apply(this, [url, ...args]).then((response) => {
+          if (response.data.html.includes("akaunting-date")) {
+            setTimeout(() => {
+              const modals = document.querySelectorAll("[data-modal-handle]")
+              if (modals.length) {
+                modals.forEach(function (modal) {
+                  initJalaliDatepickers(modal)
+                })
+              }
+            }, 200)
+          }
+          return response
+        })
+      }
+
+      return originalAxiosGet.apply(this, [url, ...args])
+    }
   }
 })()

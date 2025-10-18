@@ -54,8 +54,11 @@ class Main extends ServiceProvider
             \Modules\Employees\Models\Employee::observe(JalaliObserver::class);
         }
 
-        FacadesView::composer('components.form.group.date', function (View $view) {
+        FacadesView::composer('components.script', function (View $view) {
             $view->getFactory()->startPush('scripts', view('jalali-date::jalali_date_scripts'));
+        });
+
+        FacadesView::composer('components.form.group.date', function (View $view) {
             $data = $view->getData();
             if (isset($data['value']) && str_contains($data['value'], '-')) {
                 $parts = explode('-', substr($data['value'], 0, 10));
