@@ -26,8 +26,8 @@ Follow these steps to install the module in your Akaunting instance:
 1.  **Download the Module:**
     You have three options to get the module files:
 
-    - **Option A (Recommended):** Download the latest stable version from the [**GitHub Releases**](https://github.com/Abdipour/JalaliDate/releases) page.
-    - **Option B (Direct Download):** Download the latest development version directly as a [**ZIP file**](https://github.com/Abdipour/JalaliDate/archive/refs/heads/main.zip).
+    - **Option A (Recommended):** Download the latest stable version from the [**GitHub Releases**](https://github.com/Abdipour/akaunting-jalali-date/releases) page.
+    - **Option B (Direct Download):** Download the latest development version directly as a [**ZIP file**](https://github.com/Abdipour/akaunting-jalali-date/archive/refs/heads/main.zip).
     - **Option C (Clone):** Clone the repository into your Akaunting `modules` directory.
 
     The final path should look like this:
@@ -76,7 +76,7 @@ This module provides Jalali date support for the following Akaunting apps:
 
 - **Employees:** All date fields in the Employees app are converted to Jalali.
 
-*More app integrations will be added in future releases.*
+_More app integrations will be added in future releases._
 
 ## License
 
