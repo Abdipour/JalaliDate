@@ -57,31 +57,33 @@ class Main extends ServiceProvider
         FacadesView::composer('components.form.group.date', function (View $view) {
             $view->getFactory()->startPush('scripts', view('jalali-date::jalali_date_scripts'));
             $data = $view->getData();
-            if (isset($data['value'])) {
-                [$y, $m, $d] = explode('-', substr($data['value'], 0, 10));
+            if (isset($data['value']) && str_contains($data['value'], '-')) {
+                $parts = explode('-', substr($data['value'], 0, 10));
+                if (count($parts) === 3) {
+                    [$y, $m, $d] = $parts;
+                    $isJalaliValid = \Morilog\Jalali\CalendarUtils::checkDate($y, $m, $d, true);
+                    $isGregorianValid = \Morilog\Jalali\CalendarUtils::checkDate($y, $m, $d, false);
 
-                $isJalaliValid = \Morilog\Jalali\CalendarUtils::checkDate($y, $m, $d, true);
-                $isGregorianValid = \Morilog\Jalali\CalendarUtils::checkDate($y, $m, $d, false);
+                    // Determine if date is Jalali
+                    $isJalali = $isJalaliValid && !$isGregorianValid
+                        ? true
+                        : (!$isJalaliValid && $isGregorianValid ? false : $y < 1800);
 
-                // Determine if date is Jalali
-                $isJalali = $isJalaliValid && !$isGregorianValid
-                    ? true
-                    : (!$isJalaliValid && $isGregorianValid ? false : $y < 1800);
+                    if (!$isJalali) {
+                        if (is_string($data['value'])) {
+                            $rawDate = \Carbon\Carbon::parse($data['value']);
+                        }
 
-                if (!$isJalali) {
-                    if (is_string($data['value'])) {
-                        $rawDate = \Carbon\Carbon::parse($data['value']);
+                        try {
+                            $jalaliDate = \Morilog\Jalali\Jalalian::fromCarbon($rawDate);
+                            $data['value'] = $jalaliDate;
+                        } catch (\Exception $e) {
+                            \Log::error("Jalali date conversion failed: " . $data['value']);
+                        }
                     }
 
-                    try {
-                        $jalaliDate = \Morilog\Jalali\Jalalian::fromCarbon($rawDate);
-                        $data['value'] = $jalaliDate;
-                    } catch (\Exception $e) {
-                        \Log::error("Jalali date conversion failed: " . $data['value']);
-                    }
+                    $view->with($data);
                 }
-
-                $view->with($data);
             }
         });
 
