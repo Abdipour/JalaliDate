@@ -1,8 +1,5 @@
 # Akaunting Jalali Date Module
 
-[![Latest Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://akaunting.com/apps/jalali-date)
-[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.md)
-
 This module provides full Jalali (Persian) calendar support for Akaunting 3.1.x. It seamlessly integrates with Akaunting's core, converting all dates for display and ensuring that dates are correctly saved and processed in the backend.
 
 ## Features
