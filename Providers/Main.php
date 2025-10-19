@@ -50,7 +50,7 @@ class Main extends ServiceProvider
         Document::observe(JalaliObserver::class);
         DocumentTotal::observe(JalaliObserver::class);
 
-        if (class_exists(\Modules\Employees\Models\Employee::class)) {
+        if (class_exists('Modules\Employees\Models\Employee', false)) {
             \Modules\Employees\Models\Employee::observe(JalaliObserver::class);
         }
 
