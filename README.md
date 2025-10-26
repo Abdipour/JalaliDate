@@ -1,80 +1,83 @@
-# Akaunting Jalali Date Module
+[English](README_EN.md)
 
-This module provides full Jalali (Persian) calendar support for Akaunting 3.1.x. It seamlessly integrates with Akaunting's core, converting all dates for display and ensuring that dates are correctly saved and processed in the backend.
+# ماژول تاریخ جلالی (شمسی) برای آکانتینگ
 
-## Features
+این ماژول پشتیبانی کامل از تقویم جلالی (شمسی) را برای آکانتینگ نسخه ۳.۱.x فراهم می‌کند. این ماژول به طور یکپارچه با هسته آکانتینگ ادغام شده، تمام تاریخ‌ها را برای نمایش تبدیل کرده و اطمینان می‌دهد که تاریخ‌ها به درستی در بک‌اند ذخیره و پردازش می‌شوند.
 
-- **Jalali Datepicker:** Replaces the default Gregorian datepicker with a user-friendly Jalali calendar in all date fields.
-- **Automatic Date Conversion:** Automatically converts all Gregorian dates from the database to Jalali dates for display across the entire application (invoices, bills, reports, etc.) without requiring any changes to core view files.
-- **Correct Date Saving:** Converts Jalali dates entered by the user back to Gregorian before saving to the database, ensuring data integrity and compatibility with Akaunting's core.
-- **Preserves Core Functionality:** Works on top of Akaunting's existing date handling, preserving all original functionality and calculations.
+## ویژگی‌ها
 
-## Libraries Used
+- **انتخابگر تاریخ جلالی:** انتخابگر تاریخ پیش‌فرض میلادی را با یک تقویم جلالی کاربرپسند در تمام فیلدهای تاریخ جایگزین می‌کند.
+- **تبدیل خودکار تاریخ:** تمام تاریخ‌های میلادی از پایگاه داده را به صورت خودکار به تاریخ جلالی برای نمایش در سراسر برنامه (فاکتورها، صورتحساب‌ها، گزارشات و غیره) تبدیل می‌کند، بدون نیاز به تغییر در فایل‌های هسته.
+- **ذخیره‌سازی صحیح تاریخ:** تاریخ‌های جلالی وارد شده توسط کاربر را قبل از ذخیره در پایگاه داده به میلادی تبدیل می‌کند، که یکپارچگی داده و سازگاری با هسته آکانتینگ را تضمین می‌کند.
+- **حفظ عملکرد هسته:** بر روی سیستم مدیریت تاریخ موجود در آکانتینگ کار می‌کند و تمام عملکردهای اصلی و محاسبات را حفظ می‌کند.
 
-This module is built upon two key libraries:
+## کتابخانه‌های استفاده شده
 
-- **Backend:** [morilog/jalali](https://github.com/morilog/jalali) - For robust and reliable Jalali to Gregorian (and vice-versa) date conversions in PHP.
-- **Frontend:** [flatpickr-jalali-support](https://www.npmjs.com/package/flatpickr-jalali-support) - For the beautiful and functional Jalali datepicker UI.
+این ماژول بر پایه دو کتابخانه کلیدی ساخته شده است:
 
-## Installation
+- **بک‌اند:** [morilog/jalali](https://github.com/morilog/jalali) - برای تبدیل‌های قوی و قابل اعتماد تاریخ جلالی به میلادی (و بالعکس) در PHP.
+- **فرانت‌اند:** [flatpickr-jalali-support](https://www.npmjs.com/package/flatpickr-jalali-support) - برای رابط کاربری زیبا و کاربردی انتخابگر تاریخ جلالی.
 
-Follow these steps to install the module in your Akaunting instance:
+## نصب و راه‌اندازی
 
-1.  **Download the Module:**
-    You have three options to get the module files:
+برای نصب ماژول در آکانتینگ خود، این مراحل را دنبال کنید:
 
-    - **Option A (Recommended):** Download the latest stable version from the [**GitHub Releases**](https://github.com/Abdipour/akaunting-jalali-date/releases) page.
-    - **Option B (Direct Download):** Download the latest development version directly as a [**ZIP file**](https://github.com/Abdipour/akaunting-jalali-date/archive/refs/heads/main.zip).
-    - **Option C (Clone):** Clone the repository into your Akaunting `modules` directory.
+۱. **دانلود ماژول:**
+شما سه گزینه برای دریافت فایل‌های ماژول دارید:
 
-    The final path should look like this:
+- **گزینه اول (توصیه شده):** آخرین نسخه پایدار را از صفحه [**انتشارها در گیت‌هاب**](https://github.com/Abdipour/akaunting-jalali-date/releases) دانلود کنید.
+- **گزینه دوم (دانلود مستقیم):** آخرین نسخه در حال توسعه را مستقیماً به صورت [**فایل ZIP**](https://github.com/Abdipour/akaunting-jalali-date/archive/refs/heads/main.zip) دانلود کنید.
+- **گزینه سوم (کلون کردن):** ریپازیتوری را در دایرکتوری `modules` آکانتینگ خود کلون کنید.
 
-    ```bash
-    <your-akaunting-root>/modules/JalaliDate/
-    ```
+مسیر نهایی باید به این شکل باشد:
 
-2.  **Install Dependencies:**
-    Navigate to the module's directory in your terminal and install the required Composer and NPM dependencies.
+```bash
+<your-akaunting-root>/modules/JalaliDate/
+```
 
-    ```bash
-    cd <your-akaunting-root>/modules/JalaliDate
-    composer install
-    npm install
-    ```
+۲. **نصب وابستگی‌ها:**
+در ترمینال به دایرکتوری ماژول بروید و وابستگی‌های لازم Composer و NPM را نصب کنید.
 
-3.  **Compile Frontend Assets:**
-    Build the necessary JavaScript and CSS files for the module.
+```bash
+cd <your-akaunting-root>/modules/JalaliDate
+composer install
+npm install
+```
 
-    ```bash
-    npm run dev
-    ```
+۳. **کامپایل فایل‌های فرانت‌اند:**
+فایل‌های جاوااسکریپت و CSS لازم برای ماژول را بسازید.
 
-    _For production environments, use `npm run prod`._
+```bash
+npm run dev
+```
 
-4.  **Clear Caches:**
-    To ensure all changes are applied correctly, run the following commands from the root of your Akaunting installation:
-    ```bash
-    php artisan cache:clear
-    php artisan config:clear
-    php artisan view:clear
-    ```
+_برای محیط‌های پروداکشن، از `npm run prod` استفاده کنید._
 
-## Usage
+۴. **پاک کردن کش:**
+برای اطمینان از اعمال صحیح تغییرات، دستورات زیر را از ریشه نصب آکانتینگ خود اجرا کنید:
 
-Once installed and enabled, the module works automatically. All date fields in the Akaunting interface will use the Jalali calendar, and all dates will be displayed in the Jalali format. The conversion process is seamless and requires no extra configuration.
+```bash
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+```
 
-## Compatibility
+## نحوه استفاده
 
-This module is designed and tested for **Akaunting version 3.1.x**.
+پس از نصب و فعال‌سازی، ماژول به صورت خودکار کار می‌کند. تمام فیلدهای تاریخ در رابط کاربری آکانتینگ از تقویم جلالی استفاده خواهند کرد و تمام تاریخ‌ها در فرمت جلالی نمایش داده می‌شوند. فرآیند تبدیل یکپارچه است و به هیچ پیکربندی اضافی نیاز ندارد.
 
-## Supported Akaunting Apps
+## سازگاری
 
-This module provides Jalali date support for the following Akaunting apps:
+این ماژول برای **آکانتینگ نسخه ۳.۱.x** طراحی و تست شده است.
 
-- **Employees:** All date fields in the Employees app are converted to Jalali.
+## اپلیکیشن‌های آکانتینگ پشتیبانی شده
 
-_More app integrations will be added in future releases._
+این ماژول از تاریخ جلالی برای اپلیکیشن‌های زیر پشتیبانی می‌کند:
 
-## License
+- **کارمندان:** تمام فیلدهای تاریخ در اپلیکیشن کارمندان به جلالی تبدیل می‌شوند.
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+_پشتیبانی از اپلیکیشن‌های بیشتر در نسخه‌های آینده اضافه خواهد شد._
+
+## لایسنس
+
+این پروژه تحت لایسنس MIT منتشر شده است - برای جزئیات بیشتر به فایل [LICENSE.md](LICENSE.md) مراجعه کنید.
