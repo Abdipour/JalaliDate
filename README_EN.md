@@ -4,6 +4,8 @@
 
 This module provides full Jalali (Persian) calendar support for Akaunting 3.1.x. It seamlessly integrates with Akaunting's core and converts all dates on the client-side (browser).
 
+<p align="center"><img src="https://aramisteam.com/akaunting-git.jpg" /></p>
+
 ## ⚠️ Upgrading from Version 1 to Version 2
 
 **Important:** Version 2 has breaking changes and is not backward compatible. Users must completely remove the old version and then install the new version.
@@ -42,8 +44,9 @@ This module is built upon the following libraries:
 If you have version 1 installed, first completely remove it:
 
 ```bash
-# Disable and remove the module from Akaunting admin panel
-# Then delete module files from modules directory
+# Uninstall the module
+php artisan module:uninstall JalaliDate 1
+# Or delete module files from modules directory
 rm -rf <your-akaunting-root>/modules/JalaliDate
 ```
 
@@ -68,19 +71,9 @@ The final path should look like this:
 ```bash
 cd <your-akaunting-root>/modules/JalaliDate
 composer install
-npm install
 ```
 
-3. **Compile Frontend Assets:**
-   Build the necessary JavaScript and CSS files for the module.
-
-```bash
-npm run dev
-```
-
-_For production environments, use `npm run prod`._
-
-4. **Clear Caches:**
+3. **Clear Caches:**
    To ensure all changes are applied correctly, run the following commands from the root of your Akaunting installation:
 
 ```bash
@@ -89,10 +82,15 @@ php artisan config:clear
 php artisan view:clear
 ```
 
-5. **Activation and Settings:**
+4. **Activation and Settings:**
 
-- Activate the module from the Akaunting admin panel.
-- Go to module settings (`settings/module/edit/jalali-date`) and configure the options.
+- Activate the module.
+
+```bash
+php artisan module:install JalaliDate 1
+```
+
+- Go to module settings from Akaunting admin panel and configure the options.
 
 ## Usage
 
@@ -114,7 +112,7 @@ When printing invoices, the "فارسی" (Persian) option is available for using
 
 ## Compatibility
 
-This module is designed and tested for **Akaunting version 3.1.x**.
+This module is tested for **Akaunting version 3.1.20**.
 
 ## License
 
