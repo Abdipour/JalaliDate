@@ -25,15 +25,13 @@ class FinishInstallation
         }
 
         $this->updatePermissions();
-
     }
 
     protected function updatePermissions()
     {
         // c=create, r=read, u=update, d=delete
         $this->attachPermissionsToAdminRoles([
-            $this->alias . '-main' => 'c,r,u,d',
+            $this->alias . '-settings' => 'r,u',
         ]);
     }
-
 }

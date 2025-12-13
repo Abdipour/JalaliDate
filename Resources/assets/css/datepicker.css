@@ -1,0 +1,79 @@
+.datepicker-switcher {
+  position: absolute;
+  top: -2px;
+  left: 0;
+}
+.datepicker-switcher input {
+  display: none;
+}
+.datepicker-switcher label {
+  position: relative;
+  display: block;
+  height: 24px;
+  width: 70px;
+  background: #e3e3e3;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+.datepicker-switcher input:checked + label {
+  background: #55588b;
+}
+.datepicker-switcher label::before {
+  content: attr(data-tg-off);
+  transition: all 0.2s ease-out;
+  line-height: 20px;
+  color: #4d4d4d;
+  display: inline-block;
+  text-indent: 10px;
+  font-size: 14px;
+}
+.datepicker-switcher input:checked + label::before {
+  content: attr(data-tg-on);
+  text-indent: 20px;
+  color: #eee;
+}
+
+.datepicker-switcher input:checked + label:after {
+  left: 57px;
+  box-shadow: -1px 0px 1px #fff;
+}
+.datepicker-switcher label:after {
+  transition: all 0.2s ease-out;
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 10px;
+  top: 3px;
+  left: 3px;
+  cursor: pointer;
+  background: #fdfdfd;
+  border-radius: 0.5rem;
+  box-shadow: 1px 0 1px #a4a4a4;
+}
+
+jdp-container .jdp-day-name.selected,
+jdp-container .jdp-day.selected {
+  background-color: #55588b !important;
+}
+jdp-container .jdp-day,
+jdp-container .jdp-day-name {
+  height: 39px;
+  line-height: 39px;
+  margin: 0;
+  max-width: 39px;
+}
+jdp-container .jdp-day-name {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.54);
+}
+jdp-container .jdp-days {
+  padding: 0;
+}
+jdp-container .jdp-day:not(.disabled-day) {
+  border-radius: 50%;
+}
+jdp-container .jdp-btn-close,
+jdp-container .jdp-btn-empty,
+jdp-container .jdp-btn-today {
+  background: #55588b;
+}

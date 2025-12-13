@@ -1,7 +1,7 @@
 {
   "alias": "jalali-date",
-  "icon": "fa fa-cog",
-  "version": "1.0.0",
+  "icon": "edit_calendar",
+  "version": "2.0.0",
   "active": 1,
   "providers": [
     "Modules\\JalaliDate\\Providers\\Event",
@@ -12,6 +12,75 @@
   "requires": [],
   "reports": [],
   "widgets": [],
-  "settings": [],
-  "extra-modules": {}
+  "settings": [
+    {
+      "type": "toggle",
+      "name": "jalalidate",
+      "title": "jalali-date::general.jalalidate",
+      "enable": "general.yes",
+      "disable": "general.no",
+      "attributes": {},
+      "rules": "required|integer"
+    },
+    {
+      "type": "toggle",
+      "name": "jalalidatepicker",
+      "title": "jalali-date::general.jalalidatepicker",
+      "enable": "general.yes",
+      "disable": "general.no",
+      "attributes": {},
+      "rules": "required|integer"
+    },
+    {
+      "type": "checkbox",
+      "name": "invoice_fields",
+      "title": "jalali-date::general.invoice_fields.title",
+      "options": {
+        "company_logo": "jalali-date::general.invoice_fields.company_logo",
+        "company_name": "jalali-date::general.invoice_fields.company_name",
+        "company_address": "jalali-date::general.invoice_fields.company_address",
+        "company_tax_number": "jalali-date::general.invoice_fields.company_tax_number",
+        "company_phone": "jalali-date::general.invoice_fields.company_phone",
+        "company_email": "jalali-date::general.invoice_fields.company_email",
+        "contact_name": "jalali-date::general.invoice_fields.contact_name",
+        "contact_address": "jalali-date::general.invoice_fields.contact_address",
+        "contact_tax_number": "jalali-date::general.invoice_fields.contact_tax_number",
+        "contact_phone": "jalali-date::general.invoice_fields.contact_phone",
+        "contact_email": "jalali-date::general.invoice_fields.contact_email",
+        "order_number": "jalali-date::general.invoice_fields.order_number",
+        "document_number": "jalali-date::general.invoice_fields.document_number",
+        "issued_at": "jalali-date::general.invoice_fields.issued_at",
+        "due_at": "jalali-date::general.invoice_fields.due_at"
+      },
+      "default": [
+        "company_logo",
+        "company_name",
+        "company_phone",
+        "contact_name",
+        "contact_phone",
+        "document_number",
+        "issued_at"
+      ],
+      "attributes": {},
+      "rules": "nullable|array"
+    },
+    {
+      "type": "text",
+      "name": "invoice_contact_info",
+      "title": "jalali-date::general.invoice_contact_info",
+      "attributes": {},
+      "rules": "nullable|string"
+    },
+    {
+      "type": "text",
+      "name": "company_website",
+      "title": "jalali-date::general.company_website",
+      "attributes": {},
+      "rules": "nullable|string"
+    }
+  ],
+  "extra-modules": {},
+  "routes": {
+    "redirect_after_install": ["settings.module.edit", "jalali-date"]
+  }
 }

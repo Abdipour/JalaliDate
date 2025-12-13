@@ -16,6 +16,7 @@ yarn.lock
 /.vscode/
 .vscode/*
 /.idea/
+/.github/
 
 # Operating System files
 .DS_Store

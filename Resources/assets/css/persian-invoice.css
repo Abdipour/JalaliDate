@@ -1,0 +1,57 @@
+.print-template * {
+  font-family: "Vazirmatn FD", sans-serif !important;
+}
+
+.print-template {
+  padding: 1rem;
+}
+
+.print-template p {
+  margin-top: 0;
+}
+
+.company-info {
+  justify-content: flex-end;
+}
+
+.persian-invoice .d-logo {
+  padding-top: 0;
+}
+
+.company-phone {
+  letter-spacing: 3px;
+}
+
+.company-website {
+  letter-spacing: 1px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.header {
+  align-items: flex-end;
+}
+
+p.border-bottom-1 + p {
+  margin-top: 8px;
+}
+
+.lines tbody td:not(:last-child) {
+  border-left: 1px solid #e1e1e1;
+}
+
+.document-totals > * {
+  padding: 8px;
+  background: #f7f7f7;
+}
+
+.document-info {
+  gap: 4rem;
+}
+
+.border-bottom-1 {
+  border-bottom: 1px solid #e1e1e1;
+}
