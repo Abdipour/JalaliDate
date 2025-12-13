@@ -4,10 +4,6 @@ namespace Modules\JalaliDate\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Document\Document;
-use App\Models\Document\DocumentTotal;
-use App\Models\Banking\Transaction;
-use Modules\JalaliDate\Observers\JalaliObserver;
 use Illuminate\Support\Facades\View as FacadesView;
 use Illuminate\View\View;
 use App\Events\Document\DocumentTemplates;
@@ -25,18 +21,6 @@ class Main extends ServiceProvider
     public function register()
     {
         $this->loadConfig();
-        /* $this->app->singleton('translator', function ($app) {
-            $loader = $app['translation.loader'];
-            $locale = $app['config']['app.locale'];
-
-            $translator = new \Modules\JalaliDate\Http\Overrides\CustomTranslator($loader, $locale);
-            $translator->setFallback($app['config']['app.fallback_locale']);
-
-            return $translator;
-        });
-
-        $this->app->alias('translator', \Illuminate\Contracts\Translation\Translator::class); */
-
         $this->loadRoutes();
     }
 
@@ -52,16 +36,7 @@ class Main extends ServiceProvider
         $this->loadMigrations();
         $this->loadTranslations();
 
-        //Transaction::observe(JalaliObserver::class);
-        //Document::observe(JalaliObserver::class);
-        //DocumentTotal::observe(JalaliObserver::class);
-
-        /* if (class_exists('Modules\Employees\Models\Employee', false)) {
-            \Modules\Employees\Models\Employee::observe(JalaliObserver::class);
-        } */
-
         FacadesView::composer('components.script', function (View $view) {
-            //$view->getFactory()->startPush('scripts', view('jalali-date::jalali-flatpickr-init'));
             $view->getFactory()->startPush('scripts', view('jalali-date::jalali-datepicker-init'));
         });
 
@@ -87,57 +62,7 @@ class Main extends ServiceProvider
             );
 
             $view->getFactory()->startPush($stackName, $switchHtml);
-
-            /*if (isset($data['value']) && str_contains($data['value'], '-')) {
-                $parts = explode('-', substr($data['value'], 0, 10));
-                if (count($parts) === 3) {
-                    [$y, $m, $d] = $parts;
-                    $isJalaliValid = \Morilog\Jalali\CalendarUtils::checkDate($y, $m, $d, true);
-                    $isGregorianValid = \Morilog\Jalali\CalendarUtils::checkDate($y, $m, $d, false);
-
-                    // Determine if date is Jalali
-                    $isJalali = $isJalaliValid && !$isGregorianValid
-                        ? true
-                        : (!$isJalaliValid && $isGregorianValid ? false : $y < 1800);
-
-                    if (!$isJalali) {
-                        if (is_string($data['value'])) {
-                            $rawDate = \Carbon\Carbon::parse($data['value']);
-                        }
-
-                        try {
-                            $jalaliDate = \Morilog\Jalali\Jalalian::fromCarbon($rawDate);
-                            $data['value'] = $jalaliDate;
-                        } catch (\Exception $e) {
-                            \Log::error("Jalali date conversion failed: " . $data['value']);
-                        }
-                    }
-
-                    $view->with($data);
-                }
-            } */
         });
-
-        /* FacadesView::composer('components.documents.form.metadata', function (View $view) {
-            $data = $view->getData();
-            $dateFields = ['issuedAt', 'dueAt'];
-            foreach ($dateFields as $field) {
-                if (isset($data[$field]) && $data[$field]) {
-                    if (is_string($data[$field])) {
-                        $rawDate = \Carbon\Carbon::parse($data[$field]);
-                    }
-
-                    try {
-                        $jalaliDate = \Morilog\Jalali\Jalalian::fromCarbon($rawDate);
-                        $data[$field] = $jalaliDate;
-                    } catch (\Exception $e) {
-                        \Log::error("Jalali date conversion failed for {$field}: " . $data[$field]);
-                    }
-                }
-            }
-
-            $view->with($data);
-        }); */
 
         FacadesView::composer('components.transactions.show.create', function (View $view) {
             $settings = setting('jalali-date');
