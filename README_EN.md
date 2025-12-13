@@ -4,6 +4,8 @@
 
 This module provides full Jalali (Persian) calendar support for Akaunting 3.1.x. It seamlessly integrates with Akaunting's core and converts all dates on the client-side (browser).
 
+<p align="center"><img src="https://aramisteam.com/akaunting-git.jpg" /></p>
+
 ## ⚠️ Upgrading from Version 1 to Version 2
 
 **Important:** Version 2 has breaking changes and is not backward compatible. Users must completely remove the old version and then install the new version.
@@ -42,8 +44,9 @@ This module is built upon the following libraries:
 If you have version 1 installed, first completely remove it:
 
 ```bash
-# Disable and remove the module from Akaunting admin panel
-# Then delete module files from modules directory
+# Uninstall the module
+php artisan module:uninstall JalaliDate 1
+# Or delete module files from modules directory
 rm -rf <your-akaunting-root>/modules/JalaliDate
 ```
 
@@ -114,7 +117,7 @@ When printing invoices, the "فارسی" (Persian) option is available for using
 
 ## Compatibility
 
-This module is designed and tested for **Akaunting version 3.1.x**.
+This module is tested for **Akaunting version 3.1.20**.
 
 ## License
 
