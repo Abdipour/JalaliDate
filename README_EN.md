@@ -1,119 +1,75 @@
-[فارسی](README.md)
+[**فارسی (Persian)**](README.md) | **English**
 
-# Akaunting Jalali Date Module
+# Akaunting Jalali Date Module (v2.x)
 
-This module provides full Jalali (Persian) calendar support for Akaunting 3.1.x. It seamlessly integrates with Akaunting's core and converts all dates on the client-side (browser).
+This module provides full Jalali (Persian) calendar support for Akaunting 3.x. It integrates seamlessly with Akaunting's core and handles date conversions on the client-side for maximum performance.
 
 <p align="center"><img src="https://aramisteam.com/akaunting-git.jpg" /></p>
 
-## ⚠️ Upgrading from Version 1 to Version 2
+## ⚠️ The "License Lock" Problem
 
-**Important:** Version 2 has breaking changes and is not backward compatible. Users must completely remove the old version and then install the new version.
+Since version 3.1.20, Akaunting has introduced a strict licensing mechanism that automatically **uninstalls or deletes** local modules not found in their official App Store.
 
-### Major Changes in Version 2:
+We reported this breaking change to the Akaunting team, but unfortunately, the issue was deleted without a response. You can view the deleted reference here: [GitHub Issue #3330](https://github.com/akaunting/akaunting/issues/3330).
 
-- **Completely changed logic:** In the previous version, date conversions were performed server-side. In the new version, all conversions happen only on the client-side (browser).
-- **Advanced settings system:** Added ability to enable/disable Jalali date display and date picker.
-- **Dual calendar picker:** Option to choose between Gregorian and Jalali calendars with a user-friendly switcher.
-- **Persian invoice template:** Dedicated invoice template with customizable fields.
-- **Persian fonts:** Vazirmatn font added for proper Persian text display.
+**To solve this, we provide an automated "Installer & Patcher" to whitelist this module in your core files.**
 
-## Features
+---
 
-- **Dual Date Picker:** Option to choose between Gregorian and Jalali calendars with a user-friendly switcher in all date fields.
-- **Client-side Conversion:** All date conversions happen only in the user's browser, without changing data on the server.
-- **Advanced Settings System:** Full control over date display and pickers through the settings panel.
-- **Persian Invoice Template:** Dedicated invoice template with customizable fields and Persian fonts.
-- **Vazirmatn Font:** Uses Vazirmatn font for proper display of Persian text and numbers.
-- **Full Compatibility:** Works without modifying Akaunting core files.
+## Automated Installation (Recommended)
 
-## Libraries Used
+The easiest way to install and protect the module from being auto-deleted is using our smart script:
 
-This module is built upon the following libraries:
-
-- **Backend:** [morilog/jalali](https://github.com/morilog/jalali) - For date conversions in PHP (only for server-side formatting).
-- **Frontend:**
-  - [jalaali-js](https://github.com/jalaali/jalaali-js) - For Jalali date conversions in JavaScript.
-  - [jalalidatepicker](https://github.com/jalalidatepicker/jalalidatepicker) - For the Jalali datepicker UI.
-- **Font:** [Vazirmatn](https://github.com/rastikerdar/vazirmatn) - Free Persian Vazirmatn font.
-
-## Installation
-
-### ⚠️ Important Upgrade Notes:
-
-If you have version 1 installed, first completely remove it:
+1. **Download** the `installer.php` file from this repository.
+2. **Upload** it to your **Akaunting Root Directory** (where your `.env` file is).
+3. **Run** the script via terminal:
 
 ```bash
-# Uninstall the module
-php artisan module:uninstall JalaliDate 1
-# Or delete module files from modules directory
-rm -rf <your-akaunting-root>/modules/JalaliDate
+   php installer.php
 ```
 
-### Installation Steps:
+**What this script does:**
 
-1. **Download the Module:**
-   You have three options to get the module files:
+- Downloads the latest module source.
+- Checks and installs Composer dependencies.
+- Patches `/app/Traits/Modules.php` to whitelist the module and prevent auto-uninstall.
+- Installs and activates the module.
 
-- **Option A (Recommended):** Download the latest stable version from the [**GitHub Releases**](https://github.com/Abdipour/akaunting-jalali-date/releases) page.
-- **Option B (Direct Download):** Download the latest development version directly as a [**ZIP file**](https://github.com/Abdipour/akaunting-jalali-date/archive/refs/heads/main.zip).
-- **Option C (Clone):** Clone the repository into your Akaunting `modules` directory.
+---
 
-The final path should look like this:
+## Manual Installation (Advanced)
+
+If you prefer to install manually, follow these steps:
+
+1. **Clone/Download** the module into `modules/JalaliDate`.
+2. **Whitelist the module:** Open `app/Traits/Modules.php` and find `if ($alias == 'core') {`. Change it to:
+
+```php
+if ($alias == 'core' || $alias == 'jalali-date') {
+```
+
+3. **Install Dependencies:**
 
 ```bash
-<your-akaunting-root>/modules/JalaliDate/
+cd modules/JalaliDate && composer install
 ```
 
-2. **Install Dependencies:**
-   Navigate to the module's directory in your terminal and install the required Composer and NPM dependencies.
-
-```bash
-cd <your-akaunting-root>/modules/JalaliDate
-composer install
-```
-
-3. **Clear Caches:**
-   To ensure all changes are applied correctly, run the following commands from the root of your Akaunting installation:
-
-```bash
-php artisan cache:clear
-php artisan config:clear
-php artisan view:clear
-```
-
-4. **Activation and Settings:**
-
-- Activate the module.
+4. **Activate:**
 
 ```bash
 php artisan module:install JalaliDate 1
+php artisan optimize:clear
 ```
 
-- Go to module settings from Akaunting admin panel and configure the options.
+---
 
-## Usage
+## Features
 
-### Module Settings:
-
-After activation, go to module settings and configure the following options:
-
-- **Convert dates to Jalali:** Enable Jalali date display across the application.
-- **Jalali datepicker default:** Enable Jalali date picker as the default.
-- **Invoice fields:** Select fields to display in the Persian invoice template.
-
-### Date Picker:
-
-In date fields, users can choose between Gregorian and Jalali calendars using the "شمسی/میلادی" (Jalali/Gregorian) switcher.
-
-### Persian Invoice Template:
-
-When printing invoices, the "فارسی" (Persian) option is available for using the dedicated Persian template with Vazirmatn font.
-
-## Compatibility
-
-This module is tested for **Akaunting version 3.1.20**.
+- **Dual Date Picker:** Toggle between Gregorian and Jalali on the fly.
+- **Client-side Conversion:** No server-side data manipulation.
+- **Persian Invoice Template:** Beautiful invoices with **Vazirmatn** font.
+- **Compatibility:** Tested up to Akaunting v3.1.2x.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+MIT License.
