@@ -6,13 +6,17 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View as FacadesView;
 use Illuminate\View\View;
-use App\Events\Document\DocumentTemplates;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
 use App\Events\Document\DocumentPrinting;
+use Morilog\Jalali\Jalalian;
+use Carbon\Carbon;
 
 class Main extends ServiceProvider
 {
+    /** @var array Cached settings to avoid redundant DB calls */
+    private static $moduleSettings = null;
+
     /**
      * Register the service provider.
      *
@@ -36,130 +40,142 @@ class Main extends ServiceProvider
         $this->loadMigrations();
         $this->loadTranslations();
 
+        // Register composers. Settings will be fetched only when a view is actually rendered.
+        $this->registerViewComposers();
+
+        // Register directives and components
+        $this->registerBladeDirectives();
+
+        Blade::component('documents.template.persian', \Modules\JalaliDate\View\Components\Documents\Template\Persian::class);
+
+        $this->registerEventListeners();
+    }
+
+    /**
+     * Lazy-load settings. Returns settings from memory if already fetched.
+     */
+    private function getSettings()
+    {
+        if (self::$moduleSettings === null) {
+            // This runs only once per request, at the moment it's actually needed.
+            self::$moduleSettings = setting('jalali-date', []);
+        }
+        return self::$moduleSettings;
+    }
+
+    /**
+     * Check if Jalali feature is enabled based on lazy-loaded settings.
+     */
+    private function isJalaliEnabled(): bool
+    {
+        $settings = $this->getSettings();
+        return (bool) ($settings['jalalidate'] ?? false);
+    }
+
+    private function registerViewComposers()
+    {
+        // Script injection
         FacadesView::composer('components.script', function (View $view) {
             $view->getFactory()->startPush('scripts', view('jalali-date::jalali-datepicker-init'));
         });
 
+        // Datepicker Switcher (Depends on settings)
         FacadesView::composer('components.form.group.date', function (View $view) {
+            $settings = $this->getSettings();
             $data = $view->getData();
-            $name = $data['name'] ?? null;
-            if (!$name) {
-                return;
-            }
-            $stackName = $name . '_input_end';
-            $settings = setting('jalali-date');
-            $switchHtml = Blade::render(
-                '<div class="datepicker-switcher" style="display:none">
-                    <input id="tgl_{{$dateName}}" type="checkbox" {{ $active? "checked":""}}>
-                    <label class="tgl-btn" data-tg-off="{{$disable}}" data-tg-on="{{$enable}}" for="tgl_{{$dateName}}"></label>
-                </div>',
-                [
-                    'dateName' => $name,
-                    'enable' => trans('jalali-date::general.datepicker_switcher.enable'),
-                    'disable' => trans('jalali-date::general.datepicker_switcher.disable'),
-                    'active' => (bool)$settings['jalalidatepicker']
-                ]
-            );
+            if (empty($data['name'])) return;
 
-            $view->getFactory()->startPush($stackName, $switchHtml);
+            $switchHtml = view('jalali-date::components.datepicker-switcher', [
+                'dateName' => $data['name'],
+                'active'   => (bool) ($settings['jalalidatepicker'] ?? false)
+            ])->render();
+
+            $view->getFactory()->startPush($data['name'] . '_input_end', $switchHtml);
         });
 
-        FacadesView::composer('components.transactions.show.create', function (View $view) {
-            $settings = setting('jalali-date');
-            if ((bool)$settings['jalalidate']) {
-                $data = $view->getData();
-                $data['transaction']->created_at = \Morilog\Jalali\Jalalian::fromCarbon($data['transaction']->created_at);
-                $view->with($data);
+        // Date Converters (Logic runs only if Jalali is enabled)
+        FacadesView::composer([
+            'components.transactions.show.create',
+            'components.documents.show.create',
+            'components.documents.show.send',
+            'components.date'
+        ], function (View $view) {
+            if ($this->isJalaliEnabled()) {
+                $this->convertDatesToJalali($view);
             }
         });
 
-        FacadesView::composer('components.documents.show.create', function (View $view) {
-            $settings = setting('jalali-date');
-            if ((bool)$settings['jalalidate']) {
-                $data = $view->getData();
-                $data['created_date'] = '<span class="font-medium">' . \Morilog\Jalali\Jalalian::fromCarbon($data['document']->created_at)->format($data['document']->getCompanyDateFormat()) . '</span>';
-                $view->with($data);
-            }
-        });
-
-        FacadesView::composer('components.documents.show.send', function (View $view) {
-            $settings = setting('jalali-date');
-            if ((bool)$settings['jalalidate']) {
-                $data = $view->getData();
-                if ($data['last_sent']) {
-                    $data['last_sent_date'] = '<span class="font-medium">' . \Morilog\Jalali\Jalalian::fromCarbon($data['last_sent']->created_at)->format($data['document']->getCompanyDateFormat()) . '</span>';
-                }
-                if ($data['histories']->count()) {
-                    foreach ($data['histories'] as $key => $history) {
-                        $history->created_at = \Morilog\Jalali\Jalalian::fromCarbon($history->created_at);
-                    }
-                }
-                $view->with($data);
-            }
-        });
-
-        FacadesView::composer('components.date', function (View $view) {
-            $settings = setting('jalali-date');
-            if ((bool)$settings['jalalidate']) {
-                $data = $view->getData();
-                if (isset($data['date']) && $data['date']) {
-                    $rawDate = $data["rawDate"];
-                    $format = $data["format"];
-                    $function = $data["function"];
-                    if (is_string($rawDate)) {
-                        $rawDate = \Carbon\Carbon::parse($rawDate);
-                    }
-                    try {
-                        $jalali = \Morilog\Jalali\Jalalian::fromCarbon($rawDate);
-                        if ($function == 'diffForHumans') {
-                            $data['date'] = $jalali->ago();
-                        } else {
-                            $data['date'] = $jalali->format($format);
-                        }
-                    } catch (\Exception $e) {
-                        \Log::error("Jalali conversion failed: " . $data['date']);
-                    }
-
-                    $view->with($data);
-                }
-            }
-        });
-
-        \Blade::directive('date', function ($expression) {
-            $settings = setting('jalali-date');
-            if ((bool)$settings['jalalidate']) {
-                $format = company_date_format();
-                return "<?php 
-                        if ({$expression} instanceof \\Carbon\\Carbon) {
-                            try {
-                                echo \\Morilog\\Jalali\\Jalalian::fromCarbon({$expression})->format('{$format}');
-                            } catch (\\Exception \$e) {
-                                echo {$expression};
-                            }
-                        } else {
-                            echo {$expression};
-                        }
-                    ?>";
-            }
-        });
-
-        FacadesView::composer('components.layouts.print.head', function (View $view) {
+        // Asset Injections
+        FacadesView::composer(['components.layouts.print.head', 'components.layouts.admin.head'], function (View $view) {
             $view->getFactory()->startPush('stylesheet', view('jalali-date::typography-css'));
         });
+
         FacadesView::composer('jalali-date::components.documents.template.persian', function (View $view) {
             $view->getFactory()->startPush('stylesheet', view('jalali-date::persian-invoice-css'));
         });
-        FacadesView::composer('components.layouts.admin.head', function (View $view) {
-            $view->getFactory()->startPush('stylesheet', view('jalali-date::typography-css'));
+    }
+
+    /**
+     * Shared logic for converting dates to Jalali within composers.
+     */
+    private function convertDatesToJalali(View $view)
+    {
+        $data = $view->getData();
+        $viewName = $view->getName();
+
+        // Logic for Transactions
+        if (str_contains($viewName, 'transactions.show.create')) {
+            $data['transaction']->created_at = Jalalian::fromCarbon($data['transaction']->created_at);
+        }
+
+        // Logic for Documents (Invoices/Bills)
+        if (str_contains($viewName, 'documents.show')) {
+            if (isset($data['document'])) {
+                $format = $data['document']->getCompanyDateFormat();
+                $data['created_date'] = '<span class="font-medium">' . Jalalian::fromCarbon($data['document']->created_at)->format($format) . '</span>';
+            }
+            if (isset($data['last_sent']) && $data['last_sent']) {
+                $data['last_sent_date'] = '<span class="font-medium">' . Jalalian::fromCarbon($data['last_sent']->created_at)->format($data['document']->getCompanyDateFormat()) . '</span>';
+            }
+            if (isset($data['histories'])) {
+                foreach ($data['histories'] as $history) {
+                    $history->created_at = Jalalian::fromCarbon($history->created_at);
+                }
+            }
+        }
+
+        // Logic for Generic Date Component
+        if ($viewName === 'components.date' && isset($data['date'])) {
+            $rawDate = is_string($data["rawDate"]) ? Carbon::parse($data["rawDate"]) : $data["rawDate"];
+            try {
+                $jalali = Jalalian::fromCarbon($rawDate);
+                $data['date'] = ($data["function"] == 'diffForHumans') ? $jalali->ago() : $jalali->format($data["format"]);
+            } catch (\Exception $e) {
+                \Log::error("Jalali conversion failed: " . $e->getMessage());
+            }
+        }
+
+        $view->with($data);
+    }
+
+    private function registerBladeDirectives()
+    {
+        Blade::directive('date', function ($expression) {
+            // Note: Settings check is done INSIDE the generated PHP code 
+            // because Blade directives are compiled once and cached.
+            return "<?php 
+                \$isJalali = (bool) (setting('jalali-date.jalalidate') ?? false);
+                if (\$isJalali && {$expression} instanceof \Carbon\Carbon) {
+                    echo \Morilog\Jalali\Jalalian::fromCarbon({$expression})->format(company_date_format());
+                } else {
+                    echo {$expression};
+                }
+            ?>";
         });
+    }
 
-        \Illuminate\Support\Facades\View::composer(
-            ['settings.invoice.edit'],
-            'Modules\JalaliDate\Http\Controllers\Settings\Invoice'
-        );
-
-        Blade::component('documents.template.persian', \Modules\JalaliDate\View\Components\Documents\Template\Persian::class);
-
+    private function registerEventListeners()
+    {
         Event::listen(DocumentPrinting::class, function (DocumentPrinting $event) {
             if ($event->document->template === 'persian') {
                 $event->document->template_path = 'sales.invoices.print_persian';
