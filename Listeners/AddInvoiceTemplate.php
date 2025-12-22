@@ -8,7 +8,6 @@ class AddInvoiceTemplate
 {
     public function handle(DocumentTemplates $event): void
     {
-        \Log::debug(var_export([$event->type, $event->type != 'invoice' && $event->type != 'invoice-recurring'], true));
         if ($event->type != 'invoice' && $event->type != 'invoice-recurring') {
             return;
         }
