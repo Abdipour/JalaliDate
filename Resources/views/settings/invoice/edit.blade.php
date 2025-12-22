@@ -28,7 +28,7 @@
                     </x-slot>
 
                     <x-slot name="body">
-                        <div class="sm:col-span-3 rounded-lg cursor-pointer text-center py-2 px-2">
+                        <div class="sm:col-span-2 rounded-lg cursor-pointer text-center py-2 px-2">
                             <label class="cursor-pointer">
                                 <div @click="form.template='default'" class="flex flex-col items-center">
                                     <img src="{{ asset('public/img/invoice_templates/default.png') }}" class="h-60 my-3" alt="Default" />
@@ -41,7 +41,7 @@
                             </label>
                         </div>
 
-                        <div class="sm:col-span-3 rounded-lg cursor-pointer text-center py-2 px-2">
+                        <div class="sm:col-span-2 rounded-lg cursor-pointer text-center py-2 px-2">
                             <label class="cursor-pointer">
                                 <div @click="form.template='classic'" class="flex flex-col items-center">
                                     <img src="{{ asset('public/img/invoice_templates/classic.png') }}" class="h-60 my-3" alt="Classic" />
@@ -54,7 +54,7 @@
                             </label>
                         </div>
 
-                        <div class="sm:col-span-3 rounded-lg cursor-pointer text-center py-2 px-2">
+                        <div class="sm:col-span-2 rounded-lg cursor-pointer text-center py-2 px-2">
                             <label class="cursor-pointer">
                                 <div @click="form.template='modern'" class="flex flex-col items-center">
                                     <img src="{{ asset('public/img/invoice_templates/modern.png') }}" class="h-60 my-3" alt="Modern" />
@@ -66,11 +66,10 @@
                                 </div>
                             </label>
                         </div>
-
                         <div class="sm:col-span-3 rounded-lg cursor-pointer text-center py-2 px-2">
                             <label class="cursor-pointer">
                                 <div @click="form.template='persian'" class="flex flex-col items-center">
-                                    <img src="{{ asset('modules/JalaliDate/img/persian_preview.png') }}" class="h-60 my-3" alt="persian" />
+                                    <img src="{{ asset('modules/JalaliDate/img/persian_preview.png') }}" class="h-60 my-3" alt="Persian" />
 
                                     <div class="flex items-center space-x-2 rtl:space-x-reverse">
                                         <input type="radio" name="template" value="persian" v-model="form._template">

@@ -153,19 +153,6 @@ class Main extends ServiceProvider
             $view->getFactory()->startPush('stylesheet', view('jalali-date::typography-css'));
         });
 
-        Event::listen(DocumentTemplates::class, function (DocumentTemplates $event) {
-            if ($event->type != 'invoice') {
-                return;
-            }
-
-            $event->templates->templates->push([
-                'id' => 'persian',
-                'name' => 'فارسی',
-                'image' => asset('modules/JalaliDate/img/persian_preview.png'),
-                'template' => 'persian'
-            ]);
-        });
-
         \Illuminate\Support\Facades\View::composer(
             ['settings.invoice.edit'],
             'Modules\JalaliDate\Http\Controllers\Settings\Invoice'
